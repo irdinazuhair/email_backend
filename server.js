@@ -20,7 +20,21 @@ admin.initializeApp({
 
 const app = express();
 app.use(express.json());
-app.use(cors({ origin: ALLOWED_ORIGIN })); // set to your Firebase Hosting URL
+
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://localhost:3000",
+  ALLOWED_ORIGIN
+].filter(Boolean);
+
+app.use(cors({
+  origin: (origin, cb) => {
+    // allow non-browser calls (Postman) and same-origin
+    if (!origin) return cb(null, true);
+    if (allowedOrigins.includes(origin)) return cb(null, true);
+    return cb(new Error("CORS blocked: " + origin));
+  }
+}));
 
 app.get("/health", (req, res) => {
   res.status(200).send("OK");
