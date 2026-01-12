@@ -22,6 +22,11 @@ const app = express();
 app.use(express.json());
 app.use(cors({ origin: ALLOWED_ORIGIN })); // set to your Firebase Hosting URL
 
+app.get("/health", (req, res) => {
+  res.status(200).send("OK");
+});
+
+
 // POST /send-notification-email
 // Body: { notificationUserId, subject, text }
 app.post("/send-notification-email", async (req, res) => {
